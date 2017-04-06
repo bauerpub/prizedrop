@@ -13,12 +13,23 @@ function insertTextAtCursor(el, text) {
   }
 }
 
+function getDrawings() {
+  var xhttp = new XMLHttpRequest);
+  xhttp.open('get','http://www.sweepon.com/api/drawings',true);
+  xhttp.send();
+  response = JSON.parse(xhttp.response);
+  return response['drawings'];
+}
 
+function getLink() {
+  var drawings = getDrawings();
+  return drawings[0]['url'];
+}
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if( request.message === "paste_link" ) {
     var el = document.activeElement;
-    insertTextAtCursor(el,"http://www.sweepon.com/sweepstakes/one-million-dollar-giveaway-13779");
+    var link = getLink();
+    insertTextAtCursor(el, link);
   }
-}
-                                    );
+});
