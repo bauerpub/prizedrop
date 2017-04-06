@@ -18,9 +18,7 @@ function insertTextAtCursor(el, text) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if( request.message === "paste_link" ) {
     var el = document.activeElement;
-    if (el.type == "textarea") {
-      insertTextAtCursor(el,"http://www.sweepon.com/sweepstakes/one-million-dollar-giveaway-13779");
-    }
+    insertTextAtCursor(el,"http://www.sweepon.com/sweepstakes/one-million-dollar-giveaway-13779");
   }
 }
                                     );
