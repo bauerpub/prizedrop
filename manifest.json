@@ -5,9 +5,6 @@
   "browser_action": {
     "default_popup": "dropdown.html"
   },
-  "background": {
-    "scripts": ["background.js"]
-  },
   "content_scripts": [
     {
       "matches": [
