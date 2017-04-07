@@ -13,23 +13,39 @@ function insertTextAtCursor(el, text) {
   }
 }
 
-function getDrawings() {
-  var xhttp = new XMLHttpRequest);
+function getDrawings(callback) {
+  var xhttp = new XMLHttpRequest();
   xhttp.open('get','http://www.sweepon.com/api/drawings',true);
   xhttp.send();
-  response = JSON.parse(xhttp.response);
-  return response['drawings'];
+  xhttp.onreadystatechange = () => {
+    if (xhttp.readyState === XMLHttpRequest.DONE) {
+      const response = JSON.parse(xhttp.response)
+      callback(response.drawings);
+    }
+  }
 }
 
 function getLink() {
   var drawings = getDrawings();
-  return drawings[0]['url'];
+  return drawings[0].url;
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if( request.message === "paste_link" ) {
-    var el = document.activeElement;
-    var link = getLink();
-    insertTextAtCursor(el, link);
+  switch(request) {
+    case "paste_link":
+      var el = document.activeElement;
+      var link = getLink();
+      insertTextAtCursor(el, link);
+      break;
+    case "getDrawings":
+      console.log("getDrawings message received");
+
+      getDrawings((drawings) => {
+        sendResponse(drawings);
+      });
+
+      break;
   }
+
+  return true;
 });
