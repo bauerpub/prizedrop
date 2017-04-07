@@ -31,7 +31,7 @@ function getLink() {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  switch(request) {
+  switch(request.message) {
     case "paste_link":
       var el = document.activeElement;
       var link = getLink();

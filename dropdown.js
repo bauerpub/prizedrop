@@ -14,21 +14,23 @@ class PrizeDrop extends React.Component {
 
   getDrawings() {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, "getDrawings", (drawings) => {
+      chrome.tabs.sendMessage(tabs[0].id, {message: "getDrawings"}, (drawings) => {
         this.setState({"drawings": drawings});
       });
     });
   }
 
   renderDrawings() {
-    if (this.state.drawings === null || this.state.drawings === undefined) {
-      return <div>Nothing yet</div>;
+    switch (this.state.drawings) {
+      case null:
+      case undefined:
+        return <div>Loading...</div>;
     }
 
     return (
       this.state.drawings.map((drawing) => (
-        <li>
-          <img src={drawing.photo_url} />
+        <li key={drawing.id}>
+          <img src={drawing.photo_url} style={{height: "90px", width: "120px"}} />
           <a href={drawing.url}>{drawing.title}</a>
         </li>
       ))
@@ -37,11 +39,9 @@ class PrizeDrop extends React.Component {
 
   render() {
     return (
-      <div>
-        <ul>
-          {this.renderDrawings()}
-        </ul>
-      </div>
+      <ul>
+        {this.renderDrawings()}
+      </ul>
     );
   }
 }
